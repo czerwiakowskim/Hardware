@@ -18,7 +18,7 @@ Software is designed to run on ESP8266 boards in any version capable to work und
 * Handle data transfering via MQTT protocol
 * Ensure data is encrypted and device is authenticated against OpenSmoge backend (Azure IoT Hub)
 * Handle data buffering and throttling.
-* Managed from cloud.
+* Managed from backend.
 * OTA (over the air) software updates.
 * Easy to use setup via web page.
 * mDNS support - no IP needed to acces device from local network.
@@ -32,11 +32,11 @@ Software is designed to run on ESP8266 boards in any version capable to work und
 
 ### Authentication and security
 
-Platform is sending sensor data to Azure IoT Hub using MQTT protocol via secured TSL connection. Each device authenticate using **device-id** generated when device is registered and pair of access keys: primary and secondary access key. Normally device use primary key, but in case of key compromising device use secondary key to authenticate and request new pair of keys.
+Platform is sending sensor data to MQTT broker via secured TSL connection. Each device authenticate using **device-id** generated when device is registered and pair of access keys: primary and secondary access key. Normally device use primary key, but in case of key compromising device use secondary key to authenticate and request new pair of keys.
 
-### Sending mesurements to cloud
+### Sending mesurements to backend
 
-Device is sending data to backend on standard Azure IoT Hub events topic. All data are serialized to JSON accordingly to JSON payload described in AcquisitionAPI.
+Device is sending data to backend on well defined events topic. All data are serialized to JSON accordingly to JSON payload described in AcquisitionAPI.
 Sending data is managed internally and may by throttled.
 
 ```
@@ -62,13 +62,13 @@ TOPIC NAME: devices/device-id/messages/devicebound/#
 
 ## Data buffering
 
-To ensure data are sent in proper way with respect to throttling settings device developer is not sending data directly to MQTT topic, but put them into buffer, which is being automaticaly flused to the Cloud. Buffer may apply one of below data aggregation strategy depends on setting recieved from Cloud:
+To ensure data are sent in proper way with respect to throttling settings device developer is not sending data directly to MQTT topic, but put them into buffer, which is being automaticaly flused to the backend. Buffer may apply one of below data aggregation strategy depends on setting recieved from backend:
 
-* Packaging - all mesurements are send to Cloud in one package.
-* Average - average value od buffer with additonal min and max values is send to Cloud.
-* Median - median value of buffer with additonal min and max values is send to Cloud.
+* Packaging - all mesurements are send to backend in one package.
+* Average - average value od buffer with additonal min and max values is send to backend.
+* Median - median value of buffer with additonal min and max values is send to backend.
 
-OpenSmog NodeMCU Platform expose simple interface to put sensor data into buffer using fire & forget strategy: device developer may not care what happends with data in buffer, just assume that all will be properly transfered to the Cloud. 
+OpenSmog NodeMCU Platform expose simple interface to put sensor data into buffer using fire & forget strategy: device developer may not care what happends with data in buffer, just assume that all will be properly transfered to the backend. 
 
 ```
 StoreData(sensor, value)
@@ -80,7 +80,7 @@ To avoid phisical maintanance of device in terms of software update, platform us
 
 ## Web setup
 
-Initial configuration like WiFi settings, deviceId and security keys are provided via web interface during initial setup when OSNP works in Acces Point mode exposing own network OpenSmog_XXXX. After providing all requiered data device reboots join provied network and start sending sensor data to the Cloud. If reconfiguration is needed end user may use hardware reset button to restore device to factory defalts.
+Initial configuration like WiFi settings, deviceId and security keys are provided via web interface during initial setup when OSNP works in Acces Point mode exposing own network OpenSmog_XXXX. After providing all requiered data device reboots join provied network and start sending sensor data to the backend. If reconfiguration is needed end user may use hardware reset button to restore device to factory defalts.
 
 ## Status page and mDNS
 
