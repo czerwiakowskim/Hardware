@@ -24,6 +24,10 @@ Software is designed to run on ESP8266 boards in any version capable to work und
 * mDNS support - no IP needed to acces device from local network.
 * Status page showing actual device status (connection, security, mesurements)
 
+## Platform diagram
+
+![OpenSmog NodeMCU Platform Diagram](OSNP-Diagram.jpg)
+
 ## Data transfer: MQTT & Security
 
 ### Authentication and security
